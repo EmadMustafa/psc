@@ -76,7 +76,7 @@ k_curand_setup(curandState *d_curand_states)
   int bid = (blockIdx.z * gridDim.y + blockIdx.y) * gridDim.x + blockIdx.x;
   int id = threadIdx.x + bid * THREADS_PER_BLOCK;
 
-  curand_init(1234, id % 1024, 0, &d_curand_states[id]); // FIXME, % 1024 hack
+  curand_init(1234, id, 0, &d_curand_states[id]);
 }
 
 
@@ -337,6 +337,7 @@ template<typename BS>
 void HeatingCuda<BS>::operator()(MparticlesCuda<BS>& mprts)
 {
   if (psc_balance_generation_cnt > this->balance_generation_cnt_) {
+    balance_generation_cnt_ = psc_balance_generation_cnt;
     reset(mprts);
   }
   
